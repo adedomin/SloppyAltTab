@@ -1,0 +1,4 @@
+{ "name": "SloppyAltTab",
+  "description": "Fixes Alt Tab behavior in gnome-shell when using sloppy window focus.",
+  "uuid": "SloppyAltTab@anthony.dedominic.pw",
+  "shell-version": ["3.28.2"] }
