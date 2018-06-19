@@ -36,14 +36,19 @@ function enable() {
     let currWindow = this._items[this._selectedIndex].window;
     let lastWindow = this._items[this._previous()].window;
     let nextWindow = this._items[this._next()].window;
+    // call first to focus window
+    // some issues registering focus handlers first
+    OverrideFinish.call(this);
     // forward alt tab
     let focusHandle1 = lastWindow.connect("focus", () => {
       lastWindow.disconnect(focusHandle1);
+      focusHandle1 = undefined;
       Main.activateWindow(currWindow);
     });
     // backward alt tab
     let focusHandle2 = nextWindow.connect("focus", () => {
       nextWindow.disconnect(focusHandle2);
+      focusHandle2 = undefined;
       Main.activateWindow(currWindow);
     })
     /*
@@ -56,10 +61,9 @@ function enable() {
      * This cleans up all the listeners after ~100ms
      */
     Mainloop.timeout_add(100, () => {
-      lastWindow.disconnect(focusHandle1);
-      nextWindow.disconnect(focusHandle2);
+      if (focusHandle1) lastWindow.disconnect(focusHandle1);
+      if (focusHandle2) nextWindow.disconnect(focusHandle2);
     });
-    OverrideFinish.call(this);
     /*
      * Alternative to the signal way.
      */
